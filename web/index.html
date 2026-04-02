@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    Nalla Pazhakam — Good Habits Tracker for Kids
+    Flutter PWA  |  GitHub Pages hosted
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- ── SEO & Social ───────────────────────────────────────────── -->
+  <title>Nalla Pazhakam — Good Habits Tracker</title>
+  <meta name="description" content="Track your kids' good habits every day. Build great routines, earn stars, and level up!">
+  <meta name="keywords" content="kids habits, children tracker, good habits, parenting app, habit tracker">
+  <meta name="author" content="Nalla Pazhakam">
+
+  <!-- ── PWA ────────────────────────────────────────────────────── -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- ── iOS PWA support ────────────────────────────────────────── -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nalla Pazhakam">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- ── Theme color (browser chrome) ──────────────────────────── -->
+  <meta name="theme-color" content="#7C3AED">
+  <meta name="msapplication-navbutton-color" content="#7C3AED">
+
+  <!-- ── Favicon ────────────────────────────────────────────────── -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <!-- ── Splash screen style (shows while Flutter loads) ───────── -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      background-color: #7C3AED;
+      overflow: hidden;
+    }
+
+    #flutter-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #7C3AED 0%, #EC4899 50%, #F59E0B 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    #flutter-loading .star {
+      font-size: 72px;
+      animation: pulse 1.5s ease-in-out infinite;
+      margin-bottom: 24px;
+    }
+
+    #flutter-loading h1 {
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    #flutter-loading p {
+      color: rgba(255,255,255,0.75);
+      font-size: 15px;
+    }
+
+    #flutter-loading .dots {
+      margin-top: 32px;
+      display: flex;
+      gap: 8px;
+    }
+
+    #flutter-loading .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+
+    #flutter-loading .dot:nth-child(2) { animation-delay: 0.2s; }
+    #flutter-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+      40% { transform: translateY(-12px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Splash shown while Flutter initialises -->
+  <div id="flutter-loading">
+    <div class="star">🌟</div>
+    <h1>Nalla Pazhakam</h1>
+    <p>நல்ல பழக்கம் — Good Habits</p>
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- Flutter engine -->
+  <script src="flutter_bootstrap.js" async></script>
+
+  <script>
+    // Hide loading screen once Flutter renders
+    window.addEventListener('flutter-first-frame', function() {
+      const loader = document.getElementById('flutter-loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => loader.remove(), 400);
+      }
+    });
+  </script>
+
+</body>
+</html>

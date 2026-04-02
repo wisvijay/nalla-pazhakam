@@ -1,0 +1,88 @@
+name: 🚀 Build & Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main          # Deploy whenever code is pushed to main
+  pull_request:
+    branches:
+      - main          # Build check on PRs (no deploy)
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # ── Job 1: Build Flutter Web ─────────────────────────────────────
+  build:
+    name: 🏗 Build Flutter Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.1"
+          channel: "stable"
+          cache: true           # Cache Flutter SDK for faster builds
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🔍 Analyze code
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true  # Don't fail build on warnings
+
+      - name: 🧪 Run tests
+        run: flutter test
+        continue-on-error: true  # Don't fail if no tests yet
+
+      - name: 🌐 Build for Web (PWA)
+        run: |
+          flutter build web \
+            --release \
+            --web-renderer canvaskit \
+            --base-href "/${{ github.event.repository.name }}/"
+        # Note: base-href must match your GitHub repo name
+        # e.g. if repo is "nalla-pazhakam", base-href is "/nalla-pazhakam/"
+
+      - name: 📤 Upload build artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  # ── Job 2: Deploy to GitHub Pages (main branch only) ────────────
+  deploy:
+    name: 🌍 Deploy to GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/main'   # Only deploy from main
+
+    # Required permissions for GitHub Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: ✅ Deployment Summary
+        run: |
+          echo "## 🌟 Nalla Pazhakam Deployed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
