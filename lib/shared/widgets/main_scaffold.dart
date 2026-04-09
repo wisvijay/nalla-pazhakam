@@ -3,14 +3,15 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/router/app_router.dart';
 
-/// Persistent bottom navigation shell
+/// Persistent bottom navigation shell — Home | Groups | Settings
 class MainScaffold extends StatelessWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   static int _locationToIndex(String location) {
-    if (location.startsWith('/settings')) return 1;
+    if (location.startsWith('/groups'))   return 1;
+    if (location.startsWith('/settings')) return 2;
     return 0;
   }
 
@@ -25,10 +26,9 @@ class MainScaffold extends StatelessWidget {
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
           switch (index) {
-            case 0:
-              context.go(AppRoutes.home);
-            case 1:
-              context.go(AppRoutes.settings);
+            case 0: context.go(AppRoutes.home);
+            case 1: context.go(AppRoutes.groups);
+            case 2: context.go(AppRoutes.settings);
           }
         },
         destinations: const [
@@ -36,6 +36,11 @@ class MainScaffold extends StatelessWidget {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
             label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.groups_outlined),
+            selectedIcon: Icon(Icons.groups_rounded),
+            label: 'Groups',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),

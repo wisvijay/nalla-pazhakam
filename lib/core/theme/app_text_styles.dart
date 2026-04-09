@@ -57,6 +57,13 @@ abstract class AppTextStyles {
         height: 1.5,
       );
 
+  static TextStyle get bodyBold => GoogleFonts.nunito(
+        fontSize: 14,
+        fontWeight: FontWeight.w800,
+        color: AppColors.textPrimary,
+        height: 1.5,
+      );
+
   static TextStyle get bodySmall => GoogleFonts.nunito(
         fontSize: 12,
         fontWeight: FontWeight.w600,

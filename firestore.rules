@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Users: only the owner can read/write their own doc ──────────────────
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ── Groups: anyone signed in can read; only creator can update/delete ───
+    match /groups/{groupId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null
+          && resource.data.createdBy == request.auth.uid;
+    }
+
+    // ── Group members: signed-in users can read all; write only own record ──
+    match /groupMembers/{memberId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+          && memberId.matches('.*_' + request.auth.uid);
+    }
+
+    // ── Public kid profiles: readable by all signed-in; writable by owner ──
+    match /publicKids/{kidId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+          && resource == null || resource.data.ownerId == request.auth.uid;
+    }
+
+    // ── Weekly scores: readable by group members; writable by owner ─────────
+    match /weeklyScores/{scoreId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+          && (resource == null || resource.data.ownerId == request.auth.uid);
+    }
+  }
+}

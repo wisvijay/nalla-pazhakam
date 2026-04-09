@@ -9,18 +9,24 @@ import '../../features/daily_tracker/screens/daily_tracker_screen.dart';
 import '../../features/weekly_report/screens/weekly_report_screen.dart';
 import '../../features/monthly_report/screens/monthly_report_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
+import '../../features/auth/screens/auth_screen.dart';
+import '../../features/groups/screens/groups_screen.dart';
+import '../../features/groups/screens/leaderboard_screen.dart';
 import '../../shared/widgets/main_scaffold.dart';
 
 abstract class AppRoutes {
-  static const String home = '/';
-  static const String addKid = '/kids/add';
-  static const String editKid = '/kids/:kidId/edit';
-  static const String kidDashboard = '/kids/:kidId';
-  static const String dailyTracker = '/kids/:kidId/daily';
-  static const String weeklyReport = '/kids/:kidId/weekly';
-  static const String monthlyReport = '/kids/:kidId/monthly';
-  static const String settings = '/settings';
-  static const String manageHabits = '/settings/habits';
+  static const String home        = '/';
+  static const String addKid      = '/kids/add';
+  static const String editKid     = '/kids/:kidId/edit';
+  static const String kidDashboard= '/kids/:kidId';
+  static const String dailyTracker= '/kids/:kidId/daily';
+  static const String weeklyReport= '/kids/:kidId/weekly';
+  static const String monthlyReport='/kids/:kidId/monthly';
+  static const String settings    = '/settings';
+  static const String manageHabits= '/settings/habits';
+  static const String groups      = '/groups';
+  static const String leaderboard = '/groups/leaderboard';
+  static const String auth        = '/auth';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -38,6 +44,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
+            path: AppRoutes.groups,
+            name: 'groups',
+            builder: (context, state) => const GroupsScreen(),
+          ),
+          GoRoute(
             path: AppRoutes.settings,
             name: 'settings',
             builder: (context, state) => const SettingsScreen(),
@@ -45,7 +56,27 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // ── Add / Edit kid (slide up, full screen) ─────────────────
+      // ── Auth (slide up) ────────────────────────────────────────
+      GoRoute(
+        path: AppRoutes.auth,
+        name: 'auth',
+        pageBuilder: (context, state) => _slideUpPage(
+          state,
+          const AuthScreen(),
+        ),
+      ),
+
+      // ── Leaderboard (slide up) ─────────────────────────────────
+      GoRoute(
+        path: AppRoutes.leaderboard,
+        name: 'leaderboard',
+        pageBuilder: (context, state) => _slideUpPage(
+          state,
+          const LeaderboardScreen(),
+        ),
+      ),
+
+      // ── Add / Edit kid ─────────────────────────────────────────
       GoRoute(
         path: AppRoutes.addKid,
         name: 'addKid',
@@ -66,7 +97,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // ── Kid dashboard (slide right) ────────────────────────────
+      // ── Kid dashboard ──────────────────────────────────────────
       GoRoute(
         path: AppRoutes.kidDashboard,
         name: 'kidDashboard',
@@ -81,8 +112,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.dailyTracker,
         name: 'dailyTracker',
         pageBuilder: (context, state) {
-          final kidId = state.pathParameters['kidId']!;
-          final dateStr = state.uri.queryParameters['date'];
+          final kidId  = state.pathParameters['kidId']!;
+          final dateStr= state.uri.queryParameters['date'];
           return _slidePage(
             state,
             DailyTrackerScreen(
