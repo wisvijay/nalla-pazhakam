@@ -1,5 +1,5 @@
 name: nalla_pazhakam
-description: "Nalla Pazhakam - Good Habits Tracker for Kids"
+description: "Good Habits - Kids Habit Tracker"
 publish_to: "none"
 version: 1.0.0+1
 
@@ -66,4 +66,5 @@ flutter:
   assets:
     - assets/images/habits/
     - assets/animations/
+    - assets/android_icons/
   # Fonts are loaded via the google_fonts package at runtime (no local files needed)

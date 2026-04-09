@@ -12,7 +12,7 @@ class NallaPazhakamApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'Nalla Pazhakam',
+      title: 'Good Habits',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: router,
