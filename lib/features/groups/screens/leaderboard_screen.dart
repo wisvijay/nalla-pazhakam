@@ -5,7 +5,6 @@ import '../../../core/providers/group_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../data/models/group_model.dart';
 import '../widgets/leaderboard_card.dart';
 
 class LeaderboardScreen extends ConsumerWidget {

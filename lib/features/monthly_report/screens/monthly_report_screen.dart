@@ -9,6 +9,7 @@ import '../../../core/services/score_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/date_utils.dart';
+import '../../../data/models/kid_model.dart';
 import '../../../data/models/monthly_report_model.dart';
 import '../../../data/repositories/achievement_repository.dart';
 import '../../../data/repositories/kid_repository.dart';
@@ -406,7 +407,7 @@ class _ScoreRingCard extends StatelessWidget {
 // ── Level card ────────────────────────────────────────────────────────────────
 
 class _LevelCard extends StatelessWidget {
-  final dynamic kid;
+  final KidModel kid;
   final MonthlyReportModel? savedReport;
   final int liveLevel;
   final AnimationController animation;

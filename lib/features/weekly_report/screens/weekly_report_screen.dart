@@ -10,6 +10,7 @@ import '../../../core/services/score_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/date_utils.dart';
+import '../../../data/models/kid_model.dart';
 import '../../../data/repositories/kid_repository.dart';
 import '../../../shared/widgets/kid_avatar.dart';
 import '../../../shared/widgets/level_badge.dart';
@@ -378,7 +379,7 @@ class _DailyBreakdownCard extends StatelessWidget {
 
 class _StatsSummaryCard extends StatelessWidget {
   final WeeklyStats stats;
-  final dynamic kid;
+  final KidModel? kid;
 
   const _StatsSummaryCard({required this.stats, required this.kid});
 
@@ -429,7 +430,7 @@ class _StatsSummaryCard extends StatelessWidget {
               children: [
                 const Text('Current Level: ',
                     style: TextStyle(fontWeight: FontWeight.w600)),
-                LevelBadge(level: kid.currentLevel, compact: true),
+                LevelBadge(level: kid!.currentLevel, compact: true),
               ],
             ),
           ],

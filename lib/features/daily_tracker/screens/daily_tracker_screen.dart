@@ -1,15 +1,22 @@
+import 'dart:async';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/providers/group_provider.dart';
 import '../../../core/services/score_calculator.dart';
+import '../../../core/services/sync_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../data/models/daily_record_model.dart';
 import '../../../data/models/habit_model.dart';
+import '../../../data/repositories/achievement_repository.dart';
 import '../../../data/repositories/daily_record_repository.dart';
 import '../../../data/repositories/habit_repository.dart';
+import '../../../data/repositories/kid_repository.dart';
 import '../widgets/daily_score_header.dart';
 import '../widgets/day_navigator.dart';
 import '../widgets/habit_tile.dart';
@@ -44,6 +51,7 @@ class _DailyTrackerScreenState extends ConsumerState<DailyTrackerScreen> {
   late DateTime _date;
   late ConfettiController _confetti;
   bool _celebratedToday = false;
+  Timer? _syncDebounce;
 
   @override
   void initState() {
@@ -55,6 +63,7 @@ class _DailyTrackerScreenState extends ConsumerState<DailyTrackerScreen> {
 
   @override
   void dispose() {
+    _syncDebounce?.cancel();
     _confetti.dispose();
     super.dispose();
   }
@@ -87,6 +96,34 @@ class _DailyTrackerScreenState extends ConsumerState<DailyTrackerScreen> {
         _confetti.play();
       }
     }
+
+    // Debounce sync so rapid taps don't spam Firestore
+    if (_isToday()) _scheduleSyncIfNeeded();
+  }
+
+  void _scheduleSyncIfNeeded() {
+    _syncDebounce?.cancel();
+    _syncDebounce = Timer(const Duration(seconds: 2), () {
+      final firebaseReady = ref.read(firebaseReadyProvider);
+      if (!firebaseReady) return;
+
+      final user = ref.read(currentUserProvider);
+      if (user == null) return;
+
+      final group = ref.read(userGroupProvider).valueOrNull;
+      if (group == null) return;
+
+      final kids = ref.read(kidsListProvider);
+      if (kids.isEmpty) return;
+
+      final achievementRepo = ref.read(achievementRepositoryProvider);
+      SyncService.syncAllKids(
+        kids: kids,
+        userId: user.uid,
+        groupId: group.id,
+        achievementRepo: achievementRepo,
+      );
+    });
   }
 
   @override

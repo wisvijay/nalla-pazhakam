@@ -5,7 +5,6 @@ import '../../data/repositories/daily_record_repository.dart';
 import '../../data/repositories/habit_repository.dart';
 import '../../data/repositories/achievement_repository.dart';
 import '../../data/repositories/kid_repository.dart';
-import '../constants/app_constants.dart';
 import '../utils/date_utils.dart';
 import 'score_calculator.dart';
 
